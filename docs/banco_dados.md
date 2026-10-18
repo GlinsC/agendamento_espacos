@@ -2,7 +2,7 @@
 
 Esta documentação descreve o **modelo relacional proposto** para o Sistema de Gestão e Agendamento do COLAB (IFAL), incluindo espaços, recursos, solicitações, reservas e monitoria.
 
-> **Estado da implementação:** o diagrama representa o modelo-alvo do sistema, não o esquema atualmente criado pela aplicação. Nesta versão, somente a tabela `usuario` é criada na inicialização; as demais entidades ainda não estão implementadas no código.
+> **Estado da implementação:** o diagrama representa o modelo-alvo do sistema. Atualmente, a aplicação cria as tabelas `usuario`, `espaco` e `espaco_usuario` na inicialização; as demais entidades do diagrama ainda não estão implementadas no esquema.
 
 ---
 
@@ -18,7 +18,7 @@ erDiagram
         string cpf
         string vinculo_institucional
         string email
-        string senha_hash
+        string senha_codificada
         string perfil
         boolean ativo
     }
@@ -45,6 +45,11 @@ erDiagram
         string capacidade
         string bloco
         boolean disponibilidade
+    }
+
+    ESPACO_USUARIO {
+        int id_espaco PK, FK
+        int id_usuario PK, FK
     }
 
     ESPACO_HORARIO_FUNCIONAMENTO {
@@ -136,6 +141,8 @@ erDiagram
     
     ESPACO ||--o{ RECURSO : "aloca equipamentos"
     ESPACO ||--o{ SOLICITACAO : "recebe pedido para"
+    ESPACO ||--o{ ESPACO_USUARIO : "possui vínculos"
+    USUARIO ||--o{ ESPACO_USUARIO : "está vinculado por"
     
     ESPACO ||--o{ ESPACO_HORARIO_FUNCIONAMENTO : "funciona regularmente de"
     ESPACO ||--o{ ESPACO_EXCECAO_FUNCIONAMENTO : "possui bloqueio excepcional por"
@@ -183,7 +190,12 @@ erDiagram
 
 #### Tabela: `ESPACO`
 *   **Justificativa:** Gestão dos ambientes físicos (salas/bancadas) alvos do agendamento (RN-01).
-*   **Atributos:** `nome`, `descricao`, `capacidade`, `bloco`.
+*   **Atributos:** `nome`, `descricao`, `capacidade`, `bloco`, `disponibilidade`.
+*   **Implementação atual:** tabela `espaco`, com nome único, descrição de até 255 caracteres, capacidade e bloco de até 50 caracteres e disponibilidade booleana.
+
+#### Tabela associativa: `ESPACO_USUARIO`
+*   **Implementação atual:** tabela `espaco_usuario`, que relaciona espaços a usuários (relação N:N). As colunas `id_espaco` e `id_usuario` formam a chave primária composta e são chaves estrangeiras para `espaco.id` e `usuario.id`, respectivamente.
+*   **Regra da aplicação:** os vínculos são permitidos somente para usuários com perfil Coordenador ou Monitor. Esta tabela associativa não está representada no modelo conceitual anterior e foi incluída para refletir a implementação atual.
 
 #### Tabelas: `ESPACO_HORARIO_FUNCIONAMENTO` e `ESPACO_EXCECAO_FUNCIONAMENTO`
 *   **Justificativa:** Atendem diretamente às regras RN-11 e RN-12. O laboratório funciona em horários padronizados, mas requer fechamentos sazonais.

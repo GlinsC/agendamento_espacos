@@ -1,4 +1,4 @@
-# 🧪 Sistema de Gestão e Agendamento do COLAB (IFAL)
+\# 🧪 Sistema de Gestão e Agendamento do COLAB (IFAL)
 
 > API backend para gestão operacional, acadêmica e agendamento de espaços e recursos do Laboratório COLAB do Instituto Federal de Alagoas (IFAL) - Campus Maceió.
 
@@ -50,11 +50,16 @@ app/
 │       ├── ciclo_vida.py
 │       └── seguranca/
 └── modulos/
-    └── usuarios/
+    ├── usuarios/                        # Cadastro, autenticação e listagem de usuários
+    │   ├── casos_uso/
+    │   ├── dominio/
+    │   ├── infra/
+    │   └── interface/                   # Rotas, esquemas e dependências HTTP
+    └── espacos/                         # Cadastro, consulta e gestão de espaços físicos
         ├── casos_uso/
         ├── dominio/
         ├── infra/
-        └── interface/                   # Rotas, esquemas e dependências HTTP
+        └── interface/
 
 main.py                                  # Entrypoint da aplicação
 requirements.txt
@@ -65,22 +70,29 @@ docs/                                    # Documentação da API e do modelo de 
 
 ### Implementado: usuários e autenticação
 
-* Cadastro público de servidores solicitantes.
-* Cadastro de usuários internos por administradores ou coordenadores, com restrições para criação de perfis administrativos.
+* Cadastro público de servidores solicitantes e cadastro de usuários internos por administradores ou coordenadores, com restrições para criação de perfis administrativos.
+* Listagem de usuários por administradores e coordenadores, com filtros opcionais por perfil e situação (ativo/inativo).
 * Login por CPF ou e-mail, com emissão de token JWT.
 * Consulta dos dados do usuário autenticado.
 * Perfis disponíveis: Administrador, Coordenador, Servidor, Monitor e Aluno.
 * Endpoint de status da API em `GET /`.
 
-As rotas, formatos de entrada e requisitos de autenticação estão descritos em [docs/api.md](docs/api.md).
+### Implementado: espaços físicos
+
+* Cadastro e atualização de espaços.
+* Listagem de espaços com visibilidade conforme o perfil autenticado.
+* Desativação e reativação de espaços.
+* Vínculo e remoção de vínculos de coordenadores e monitores a espaços.
+
+As rotas, formatos de entrada e requisitos de autenticação estão descritos em [docs/api.md](docs/api.md). O cadastro e a gestão de equipamentos/recursos ainda não possuem rotas implementadas.
 
 ### Planejado: gestão do laboratório
 
-Projetos e participantes, espaços e recursos, horários de funcionamento, solicitações de agendamento, anexos, agenda e turnos de monitoria fazem parte do escopo planejado. Esses recursos ainda não possuem rotas implementadas nesta versão.
+Projetos e participantes, equipamentos/recursos, horários de funcionamento, solicitações de agendamento, anexos, agenda e turnos de monitoria fazem parte do escopo planejado. Esses recursos ainda não possuem rotas implementadas nesta versão.
 
 ## 💾 Estrutura do Banco de Dados
 
-O modelo relacional proposto para o sistema completo está em [docs/banco_dados.md](docs/banco_dados.md). Atualmente, a aplicação cria somente a tabela `usuario` durante a inicialização; as demais entidades documentadas ainda não estão implementadas no esquema da aplicação.
+O modelo relacional proposto para o sistema completo está em [docs/banco_dados.md](docs/banco_dados.md). Atualmente, a aplicação cria as tabelas `usuario`, `espaco` e `espaco_usuario`; as demais entidades do modelo ainda não estão implementadas no esquema da aplicação.
 
 ## 🛠️ Como Executar o Projeto Localmente
 
@@ -139,8 +151,8 @@ O modelo relacional proposto para o sistema completo está em [docs/banco_dados.
 
    `ORIGENS_CORS` recebe origens completas, separadas por vírgula (por exemplo, `http://localhost:5173`). `*` permite qualquer origem e não pode ser combinado com credenciais CORS. `HOSTS_PERMITIDOS` recebe apenas hosts, sem esquema ou porta.
 
-6. **Crie a tabela de usuários:**
-   Ao iniciar, a aplicação cria a tabela `usuario` caso ela ainda não exista. Essa criação automática não substitui migrações/versionamento de esquema para alterações futuras.
+6. **Crie as tabelas iniciais:**
+   Ao iniciar, a aplicação cria as tabelas `usuario`, `espaco` e `espaco_usuario` caso ainda não existam. Essa criação automática não substitui migrações/versionamento de esquema para alterações futuras.
 
 7. **Inicie o Servidor Local:**
 
