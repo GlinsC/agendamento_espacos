@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  # Serviço do Banco de Dados PostgreSQL[cite: 4]
+  db:
+    image: postgres:15-alpine
+    container_name: colab_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: colab_user
+      POSTGRES_PASSWORD: colab_password
+      POSTGRES_DB: colab_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U colab_user -d colab_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Serviço da Aplicação FastAPI (Backend)
+  api:
+    build: .
+    container_name: colab_api
+    restart: always
+    ports:
+      - "8000:8000"
+    volumes:
+      # Mapeia o código local para dentro do container (permite o Live Reload)
+      - .:/app
+    environment:
+      # URL de conexão com o banco (Alembic e SQLAlchemy usarão isso)
+      - URL_BANCO_DADOS=postgresql://colab_user:colab_password@db:5432/colab_db
+      - CHAVE_SECRETA=b7f27056380436aa43a7a109f4f7c80a
+      - MINUTOS_EXPIRACAO_TOKEN=30
+    depends_on:
+      db:
+        condition: service_healthy
+
+# Define o volume persistente para que os dados do banco não sumam ao desligar o container
+volumes:
+  postgres_data:
