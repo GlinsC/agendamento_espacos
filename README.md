@@ -50,11 +50,13 @@ app/
 │       ├── ciclo_vida.py
 │       └── seguranca/
 └── modulos/
-    └── usuarios/
-        ├── casos_uso/
+    ├── usuarios/
+    ├── espacos/
+    └── projeto/                         # Camadas de casos de uso, domínio,
+        ├── casos_uso/                   # infraestrutura e interface
         ├── dominio/
         ├── infra/
-        └── interface/                   # Rotas, esquemas e dependências HTTP
+        └── interface/
 
 main.py                                  # Entrypoint da aplicação
 requirements.txt
@@ -63,7 +65,7 @@ docs/                                    # Documentação da API e do modelo de 
 
 ## ⚙️ Funcionalidades
 
-### Implementado: usuários e autenticação
+### Implementado: usuários, espaços e projetos
 
 * Cadastro público de servidores solicitantes.
 * Cadastro de usuários internos por administradores ou coordenadores, com restrições para criação de perfis administrativos.
@@ -71,16 +73,18 @@ docs/                                    # Documentação da API e do modelo de 
 * Consulta dos dados do usuário autenticado.
 * Perfis disponíveis: Administrador, Coordenador, Servidor, Monitor e Aluno.
 * Endpoint de status da API em `GET /`.
+* Cadastro e consulta de projetos, gestão de participantes e avaliação administrativa (Pendente, Aceito ou Recusado).
+* Cadastro, consulta, atualização, desativação e reativação de espaços, além de vínculos entre espaços e usuários.
 
-As rotas, formatos de entrada e requisitos de autenticação estão descritos em [docs/api.md](docs/api.md).
+As rotas, formatos de entrada e requisitos de autenticação estão descritos em [docs/api.md](docs/api.md). A criação de projetos é permitida aos perfis `Servidor` e `Monitor`; o perfil `Servidor` atende ao papel de Professor indicado para este fluxo.
 
 ### Planejado: gestão do laboratório
 
-Projetos e participantes, espaços e recursos, horários de funcionamento, solicitações de agendamento, anexos, agenda e turnos de monitoria fazem parte do escopo planejado. Esses recursos ainda não possuem rotas implementadas nesta versão.
+Recursos, horários de funcionamento, solicitações de agendamento, anexos, agenda e turnos de monitoria continuam no escopo planejado.
 
 ## 💾 Estrutura do Banco de Dados
 
-O modelo relacional proposto para o sistema completo está em [docs/banco_dados.md](docs/banco_dados.md). Atualmente, a aplicação cria somente a tabela `usuario` durante a inicialização; as demais entidades documentadas ainda não estão implementadas no esquema da aplicação.
+O modelo relacional proposto para o sistema completo está em [docs/banco_dados.md](docs/banco_dados.md). A aplicação cria as tabelas de usuários, espaços e projetos durante a inicialização; as demais entidades documentadas ainda não estão implementadas no esquema da aplicação.
 
 ## 🛠️ Como Executar o Projeto Localmente
 

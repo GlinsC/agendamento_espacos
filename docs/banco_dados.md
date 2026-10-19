@@ -2,7 +2,7 @@
 
 Esta documentação descreve o **modelo relacional proposto** para o Sistema de Gestão e Agendamento do COLAB (IFAL), incluindo espaços, recursos, solicitações, reservas e monitoria.
 
-> **Estado da implementação:** o diagrama representa o modelo-alvo do sistema, não o esquema atualmente criado pela aplicação. Nesta versão, somente a tabela `usuario` é criada na inicialização; as demais entidades ainda não estão implementadas no código.
+> **Estado da implementação:** o diagrama representa o modelo-alvo do sistema. A aplicação cria atualmente as tabelas `usuario`, `espaco`, `espaco_usuario`, `projeto` e `projeto_participante` na inicialização; as demais entidades ainda não estão implementadas no código.
 
 ---
 
@@ -30,6 +30,7 @@ erDiagram
         int id_responsavel FK
         int quantidade_participantes
         string documentacao_base
+        string status
     }
 
     PROJETO_PARTICIPANTE {
@@ -173,6 +174,7 @@ erDiagram
 *   **Atributos:**
     *   `descricao`, `finalidade`, `quantidade_participantes`: Informações que balizam a prioridade de análise pela coordenação.
     *   `documentacao_base`: Link (ex: SIGAA, SUAP) comprovando a existência formal do projeto no instituto.
+    *   `status`: Avaliação administrativa do projeto (`Pendente`, `Aceito` ou `Recusado`), distinta da decisão sobre uma solicitação de uso.
 
 #### Tabela: `PROJETO_PARTICIPANTE`
 *   **Justificativa:** Atende à Regra de Negócio RN-19, identificando as pessoas relevantes e autorizadas a permanecer no laboratório sob aquele projeto. É uma tabela associativa (N:N).
