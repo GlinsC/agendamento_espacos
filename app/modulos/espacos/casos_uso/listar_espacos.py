@@ -1,20 +1,23 @@
-from app.modulos.espacos.dominio.contratos import EspacoRepositorioContrato
 from app.modulos.espacos.dominio.entidades import Espaco
 from app.modulos.usuarios.dominio.entidades import PerfilUsuario, Usuario
 
 
 class ListarEspacosCasoDeUso:
-    def __init__(self, repositorio: EspacoRepositorioContrato):
+    def __init__(self, repositorio):
         self.repositorio = repositorio
 
-    def executar(self, usuario_logado: Usuario) -> list[Espaco]:
+    def executar(
+        self, usuario_logado: Usuario, skip: int = 0, limit: int = 100
+    ) -> list[Espaco]:
         if usuario_logado.perfil == PerfilUsuario.ADMINISTRADOR:
-            return self.repositorio.buscar_todos()
-            
+            return self.repositorio.listar(skip=skip, limit=limit)
+
         if usuario_logado.perfil == PerfilUsuario.SERVIDOR:
-            return self.repositorio.buscar_todos_ativos()
-            
+            return self.repositorio.listar(apenas_ativos=True, skip=skip, limit=limit)
+
         if usuario_logado.perfil in [PerfilUsuario.COORDENADOR, PerfilUsuario.MONITOR]:
-            return self.repositorio.buscar_por_vinculo_usuario(usuario_logado.id)
-            
+            return self.repositorio.listar(
+                id_usuario_vinculado=usuario_logado.id, skip=skip, limit=limit
+            )
+
         return []

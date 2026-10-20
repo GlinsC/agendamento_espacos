@@ -57,7 +57,7 @@ def cadastrar_usuario_interno(
     "/login",
     response_model=TokenResposta,
     status_code=status.HTTP_200_OK,
-    summary="Autenticar Usuário (Login)",
+    summary="Autenticar Usuário - Login (Público)",
     description="Valida as credenciais do usuário e devolve o token JWT de acesso. (Público)"
 )
 def login(
@@ -82,12 +82,14 @@ def obter_dados_pessoais(
     "/",
     response_model=list[UsuarioResposta],
     status_code=status.HTTP_200_OK,
-    summary="Listar usuários (Com filtros dinâmicos)"
+    summary="Listar usuários com filtros e paginação (Público)"
 )
 def listar_usuarios(
     usuario_logado: Annotated[Usuario, Depends(admin_ou_coordenador)],
     caso_de_uso: Annotated[ListarUsuariosCasoDeUso, Depends(pegar_caso_de_uso_listar_usuarios)],
-    perfil: PerfilUsuario | None = Query(None, description="Filtrar por perfil (Admin, Coordenador, etc)"),
-    ativo: bool | None = Query(None, description="Filtrar por status (true para ativos, false para inativos)")
+    perfil: Annotated[PerfilUsuario | None, Query(description="Filtrar por perfil (Admin, Coordenador, etc)")] = None,
+    ativo: Annotated[bool | None, Query(description="Filtrar por status")] = None,
+    skip: Annotated[int, Query(ge=0, description="Número de registros para pular (Offset)")] = 0,
+    limit: Annotated[int, Query(ge=1, le=100, description="Limite máximo de registros retornados (Max 100)")] = 100
 ):
-    return caso_de_uso.executar(perfil=perfil, ativo=ativo)
+    return caso_de_uso.executar(perfil=perfil, ativo=ativo, skip=skip, limit=limit)

@@ -60,7 +60,7 @@ erDiagram
         int id_espaco FK
     }
 
-    ESPACO_EXCECAO_FUNCIONAMENTO {
+    ESPACO_PAUSA_FUNCIONAMENTO {
         int id PK
         date data_inicio
         date data_fim
@@ -145,7 +145,7 @@ erDiagram
     USUARIO ||--o{ ESPACO_USUARIO : "está vinculado por"
     
     ESPACO ||--o{ ESPACO_HORARIO_FUNCIONAMENTO : "funciona regularmente de"
-    ESPACO ||--o{ ESPACO_EXCECAO_FUNCIONAMENTO : "possui bloqueio excepcional por"
+    ESPACO ||--o{ ESPACO_PAUSA_FUNCIONAMENTO : "possui bloqueio excepcional por"
     
     SOLICITACAO ||--|{ SOLICITACAO_HORARIO : "deseja ocorrer nos períodos"
     SOLICITACAO ||--o{ SOLICITACAO_RECURSO : "engloba"
@@ -197,7 +197,7 @@ erDiagram
 *   **Implementação atual:** tabela `espaco_usuario`, que relaciona espaços a usuários (relação N:N). As colunas `id_espaco` e `id_usuario` formam a chave primária composta e são chaves estrangeiras para `espaco.id` e `usuario.id`, respectivamente.
 *   **Regra da aplicação:** os vínculos são permitidos somente para usuários com perfil Coordenador ou Monitor. Esta tabela associativa não está representada no modelo conceitual anterior e foi incluída para refletir a implementação atual.
 
-#### Tabelas: `ESPACO_HORARIO_FUNCIONAMENTO` e `ESPACO_EXCECAO_FUNCIONAMENTO`
+#### Tabelas: `ESPACO_HORARIO_FUNCIONAMENTO` e `ESPACO_PAUSA_FUNCIONAMENTO`
 *   **Justificativa:** Atendem diretamente às regras RN-11 e RN-12. O laboratório funciona em horários padronizados, mas requer fechamentos sazonais.
 *   **Atributos:** 
     *   `dia_semana`, `hora_abertura`, `hora_fechamento`: (ex: seg-sex, 8h às 18h).
