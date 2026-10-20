@@ -26,7 +26,7 @@ class GerenciarVinculosCasoDeUso:
         if not usuario:
             raise EntidadeNaoEncontradaErro("Usuário não encontrado.")
 
-        if usuario.perfil not in [PerfilUsuario.COORDENADOR, PerfilUsuario.MONITOR]:
+        if usuario.perfil not in [PerfilUsuario.ADMINISTRADOR, PerfilUsuario.COORDENADOR, PerfilUsuario.MONITOR]:
             raise AcessoNegadoErro("Apenas usuários com perfil de Coordenador ou Monitor podem ser vinculados a espaços.")
         
         return espaco, usuario

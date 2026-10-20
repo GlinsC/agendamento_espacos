@@ -20,9 +20,12 @@ class CodificadorSenhaContrato(ABC):
 
 
 class UsuarioRepositorioContrato(ABC):
-    @abstractmethod
     def listar(
-        self, perfil: PerfilUsuario | None = None, ativo: bool | None = None
+        self,
+        perfil: PerfilUsuario | None = None,
+        ativo: bool | None = None,
+        skip: int = 0,
+        limit: int = 100,
     ) -> list[Usuario]:
         pass
 

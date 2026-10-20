@@ -18,7 +18,7 @@ erDiagram
         string cpf
         string vinculo_institucional
         string email
-        string senha_hash
+        string senha_codificada
         string perfil
         boolean ativo
     }
@@ -48,6 +48,11 @@ erDiagram
         boolean disponibilidade
     }
 
+    ESPACO_USUARIO {
+        int id_espaco PK, FK
+        int id_usuario PK, FK
+    }
+
     ESPACO_HORARIO_FUNCIONAMENTO {
         int id PK
         int dia_semana
@@ -56,7 +61,7 @@ erDiagram
         int id_espaco FK
     }
 
-    ESPACO_EXCECAO_FUNCIONAMENTO {
+    ESPACO_PAUSA_FUNCIONAMENTO {
         int id PK
         date data_inicio
         date data_fim
@@ -137,9 +142,11 @@ erDiagram
     
     ESPACO ||--o{ RECURSO : "aloca equipamentos"
     ESPACO ||--o{ SOLICITACAO : "recebe pedido para"
+    ESPACO ||--o{ ESPACO_USUARIO : "possui vínculos"
+    USUARIO ||--o{ ESPACO_USUARIO : "está vinculado por"
     
     ESPACO ||--o{ ESPACO_HORARIO_FUNCIONAMENTO : "funciona regularmente de"
-    ESPACO ||--o{ ESPACO_EXCECAO_FUNCIONAMENTO : "possui bloqueio excepcional por"
+    ESPACO ||--o{ ESPACO_PAUSA_FUNCIONAMENTO : "possui bloqueio excepcional por"
     
     SOLICITACAO ||--|{ SOLICITACAO_HORARIO : "deseja ocorrer nos períodos"
     SOLICITACAO ||--o{ SOLICITACAO_RECURSO : "engloba"
@@ -185,9 +192,14 @@ erDiagram
 
 #### Tabela: `ESPACO`
 *   **Justificativa:** Gestão dos ambientes físicos (salas/bancadas) alvos do agendamento (RN-01).
-*   **Atributos:** `nome`, `descricao`, `capacidade`, `bloco`.
+*   **Atributos:** `nome`, `descricao`, `capacidade`, `bloco`, `disponibilidade`.
+*   **Implementação atual:** tabela `espaco`, com nome único, descrição de até 255 caracteres, capacidade e bloco de até 50 caracteres e disponibilidade booleana.
 
-#### Tabelas: `ESPACO_HORARIO_FUNCIONAMENTO` e `ESPACO_EXCECAO_FUNCIONAMENTO`
+#### Tabela associativa: `ESPACO_USUARIO`
+*   **Implementação atual:** tabela `espaco_usuario`, que relaciona espaços a usuários (relação N:N). As colunas `id_espaco` e `id_usuario` formam a chave primária composta e são chaves estrangeiras para `espaco.id` e `usuario.id`, respectivamente.
+*   **Regra da aplicação:** os vínculos são permitidos somente para usuários com perfil Coordenador ou Monitor. Esta tabela associativa não está representada no modelo conceitual anterior e foi incluída para refletir a implementação atual.
+
+#### Tabelas: `ESPACO_HORARIO_FUNCIONAMENTO` e `ESPACO_PAUSA_FUNCIONAMENTO`
 *   **Justificativa:** Atendem diretamente às regras RN-11 e RN-12. O laboratório funciona em horários padronizados, mas requer fechamentos sazonais.
 *   **Atributos:** 
     *   `dia_semana`, `hora_abertura`, `hora_fechamento`: (ex: seg-sex, 8h às 18h).

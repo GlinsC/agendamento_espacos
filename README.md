@@ -1,4 +1,4 @@
-# 🧪 Sistema de Gestão e Agendamento do COLAB (IFAL)
+\# 🧪 Sistema de Gestão e Agendamento do COLAB (IFAL)
 
 > API backend para gestão operacional, acadêmica e agendamento de espaços e recursos do Laboratório COLAB do Instituto Federal de Alagoas (IFAL) - Campus Maceió.
 
@@ -50,10 +50,8 @@ app/
 │       ├── ciclo_vida.py
 │       └── seguranca/
 └── modulos/
-    ├── usuarios/
-    ├── espacos/
-    └── projeto/                         # Camadas de casos de uso, domínio,
-        ├── casos_uso/                   # infraestrutura e interface
+    └── usuarios/
+        ├── casos_uso/
         ├── dominio/
         ├── infra/
         └── interface/
@@ -67,8 +65,8 @@ docs/                                    # Documentação da API e do modelo de 
 
 ### Implementado: usuários, espaços e projetos
 
-* Cadastro público de servidores solicitantes.
-* Cadastro de usuários internos por administradores ou coordenadores, com restrições para criação de perfis administrativos.
+* Cadastro público de servidores solicitantes e cadastro de usuários internos por administradores ou coordenadores, com restrições para criação de perfis administrativos.
+* Listagem de usuários por administradores e coordenadores, com filtros opcionais por perfil e situação (ativo/inativo).
 * Login por CPF ou e-mail, com emissão de token JWT.
 * Consulta dos dados do usuário autenticado.
 * Perfis disponíveis: Administrador, Coordenador, Servidor, Monitor e Aluno.
@@ -76,15 +74,15 @@ docs/                                    # Documentação da API e do modelo de 
 * Cadastro e consulta de projetos, gestão de participantes e avaliação administrativa (Pendente, Aceito ou Recusado).
 * Cadastro, consulta, atualização, desativação e reativação de espaços, além de vínculos entre espaços e usuários.
 
-As rotas, formatos de entrada e requisitos de autenticação estão descritos em [docs/api.md](docs/api.md). A criação de projetos é permitida aos perfis `Servidor` e `Monitor`; o perfil `Servidor` atende ao papel de Professor indicado para este fluxo.
+As rotas, formatos de entrada e requisitos de autenticação estão descritos em [docs/api.md](docs/api.md).
 
 ### Planejado: gestão do laboratório
 
-Recursos, horários de funcionamento, solicitações de agendamento, anexos, agenda e turnos de monitoria continuam no escopo planejado.
+Projetos e participantes, espaços e recursos, horários de funcionamento, solicitações de agendamento, anexos, agenda e turnos de monitoria fazem parte do escopo planejado. Esses recursos ainda não possuem rotas implementadas nesta versão.
 
 ## 💾 Estrutura do Banco de Dados
 
-O modelo relacional proposto para o sistema completo está em [docs/banco_dados.md](docs/banco_dados.md). A aplicação cria as tabelas de usuários, espaços e projetos durante a inicialização; as demais entidades documentadas ainda não estão implementadas no esquema da aplicação.
+O modelo relacional proposto para o sistema completo está em [docs/banco_dados.md](docs/banco_dados.md). Atualmente, a aplicação cria somente a tabela `usuario` durante a inicialização; as demais entidades documentadas ainda não estão implementadas no esquema da aplicação.
 
 ## 🛠️ Como Executar o Projeto Localmente
 
@@ -143,8 +141,8 @@ O modelo relacional proposto para o sistema completo está em [docs/banco_dados.
 
    `ORIGENS_CORS` recebe origens completas, separadas por vírgula (por exemplo, `http://localhost:5173`). `*` permite qualquer origem e não pode ser combinado com credenciais CORS. `HOSTS_PERMITIDOS` recebe apenas hosts, sem esquema ou porta.
 
-6. **Crie a tabela de usuários:**
-   Ao iniciar, a aplicação cria a tabela `usuario` caso ela ainda não exista. Essa criação automática não substitui migrações/versionamento de esquema para alterações futuras.
+6. **Crie as tabelas iniciais:**
+   Ao iniciar, a aplicação cria as tabelas `usuario`, `espaco` e `espaco_usuario` caso ainda não existam. Essa criação automática não substitui migrações/versionamento de esquema para alterações futuras.
 
 7. **Inicie o Servidor Local:**
 
